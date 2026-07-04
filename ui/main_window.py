@@ -1,42 +1,41 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
-    QApplication,
-    QFrame,
-    QHBoxLayout,
-    QLabel,
     QMainWindow,
-    QPushButton,
-    QVBoxLayout,
     QWidget,
-) 
-
-from core.app_info import (
-    APP_NAME,
-    VERSION,
-    WINDOW_WIDTH,
-    WINDOW_HEIGHT,
+    QFrame,
+    QLabel,
+    QPushButton,
+    QHBoxLayout,
+    QVBoxLayout,
+    QSizePolicy,
+    QStatusBar,
 )
+
+from ui.project_setup_widget import ProjectSetupWidget
 
 
 class MainWindow(QMainWindow):
-
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle(f"{APP_NAME} v{VERSION}")
-        self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
+        self.setWindowTitle("AI Clipping Tool")
+        self.resize(1400, 850)
+        self.setMinimumSize(1200, 700)
 
         self.build_ui()
 
     def build_ui(self):
 
-        central = QWidget()
-        self.setCentralWidget(central)
+        # ==========================
+        # Central Widget
+        # ==========================
 
-        root = QHBoxLayout()
-        root.setContentsMargins(0, 0, 0, 0)
-        root.setSpacing(0)
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+
+        root_layout = QHBoxLayout(central_widget)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
 
         # ==========================
         # Sidebar
@@ -46,280 +45,149 @@ class MainWindow(QMainWindow):
         sidebar.setFixedWidth(220)
 
         sidebar.setStyleSheet("""
-            background:#202020;
+            QFrame{
+                background:#1f1f1f;
+            }
+
+            QPushButton{
+                background:transparent;
+                color:white;
+                border:none;
+                text-align:left;
+                padding:12px;
+                font-size:14px;
+            }
+
+            QPushButton:hover{
+                background:#2d2d2d;
+            }
         """)
 
-        side_layout = QVBoxLayout()
+        sidebar_layout = QVBoxLayout(sidebar)
+        sidebar_layout.setContentsMargins(15,20,15,20)
+        sidebar_layout.setSpacing(10)
 
         logo = QLabel("AI Clipping Tool")
-        logo.setFont(QFont("Segoe UI", 14, QFont.Bold))
-        logo.setStyleSheet("color:white; padding:20px;")
 
-        side_layout.addWidget(logo)
+        logo.setStyleSheet("""
+            color:white;
+            font-size:22px;
+            font-weight:bold;
+        """)
 
-        for text in [
-            "🏠 Home",
-            "📁 Projects",
-            "⚙ Settings"
-        ]:
+        sidebar_layout.addWidget(logo)
+        sidebar_layout.addSpacing(25)
 
-            btn = QPushButton(text)
+        self.home_button = QPushButton("🏠  Home")
+        self.projects_button = QPushButton("📁  Projects")
+        self.settings_button = QPushButton("⚙  Settings")
 
-            btn.setCursor(Qt.PointingHandCursor)
+        sidebar_layout.addWidget(self.home_button)
+        sidebar_layout.addWidget(self.projects_button)
+        sidebar_layout.addWidget(self.settings_button)
 
-            btn.setMinimumHeight(42)
+        sidebar_layout.addStretch()
 
-            btn.setStyleSheet("""
-                QPushButton{
-                    color:white;
-                    background:#2d2d2d;
-                    border:none;
-                    text-align:left;
-                    padding-left:15px;
-                }
+        version = QLabel("Version 0.2.3.1")
 
-                QPushButton:hover{
-                    background:#3a3a3a;
-                }
-            """)
+        version.setStyleSheet("""
+            color:#888888;
+            font-size:11px;
+        """)
 
-            side_layout.addWidget(btn)
-
-        side_layout.addStretch()
-
-        sidebar.setLayout(side_layout)
+        sidebar_layout.addWidget(version)
 
         # ==========================
-        # Right Side
+        # Right Panel
         # ==========================
 
-        right = QWidget()
+        right_panel = QWidget()
 
-        right_layout = QVBoxLayout()
+        right_layout = QVBoxLayout(right_panel)
         right_layout.setContentsMargins(0,0,0,0)
+        right_layout.setSpacing(0)
 
+        # ==========================
         # Header
+        # ==========================
 
         header = QFrame()
-        header.setFixedHeight(60)
+
+        header.setFixedHeight(65)
 
         header.setStyleSheet("""
-            background:#252526;
-            color:white;
+            QFrame{
+                background:#2b2b2b;
+                border-bottom:1px solid #3a3a3a;
+            }
         """)
 
-        header_layout = QHBoxLayout()
+        header_layout = QHBoxLayout(header)
+        header_layout.setContentsMargins(20,10,20,10)
 
-        title = QLabel(f"{APP_NAME}")
+        title = QLabel("🚀 AI Clipping Tool")
 
-        title.setFont(QFont("Segoe UI", 13, QFont.Bold))
+        title.setStyleSheet("""
+            color:white;
+            font-size:24px;
+            font-weight:bold;
+        """)
 
-        header_layout.addWidget(title)
+        subtitle = QLabel("Professional AI Video Clipping")
 
+        subtitle.setStyleSheet("""
+            color:#aaaaaa;
+            font-size:12px;
+        """)
+
+        title_layout = QVBoxLayout()
+        title_layout.setSpacing(2)
+        title_layout.addWidget(title)
+        title_layout.addWidget(subtitle)
+
+        header_layout.addLayout(title_layout)
         header_layout.addStretch()
 
-        version = QLabel(f"v{VERSION}")
-
-        header_layout.addWidget(version)
-
-        header.setLayout(header_layout)
-
-        # ==========================
-        # Workspace
-        # ==========================
-
-workspace = QFrame()
-
-workspace.setStyleSheet("""
-    background:#2b2b2b;
-""")
-
-workspace_layout = QVBoxLayout()
-
-workspace_layout.setAlignment(Qt.AlignCenter)
-
-# Card
-
-card = QFrame()
-
-card.setFixedWidth(700)
-
-card.setStyleSheet("""
-QFrame{
-    background:#353535;
-    border-radius:12px;
-}
-""")
-
-card_layout = QVBoxLayout()
-
-card_layout.setContentsMargins(30,30,30,30)
-
-# Title
-
-title = QLabel("Project Setup")
-
-title.setAlignment(Qt.AlignCenter)
-
-title.setStyleSheet("""
-color:white;
-font-size:24px;
-font-weight:bold;
-""")
-
-card_layout.addWidget(title)
-
-card_layout.addSpacing(20)
-
-# ---------- INPUT VIDEO ----------
-
-video_label = QLabel("🎥 Input Video")
-video_label.setStyleSheet("color:white;")
-
-card_layout.addWidget(video_label)
-
-self.video_path = QLabel("No video selected")
-
-self.video_path.setMinimumHeight(35)
-
-self.video_path.setStyleSheet("""
-background:#222;
-color:#bbbbbb;
-padding:8px;
-border-radius:6px;
-""")
-
-card_layout.addWidget(self.video_path)
-
-card_layout.addSpacing(15)
-
-# ---------- LOGO ----------
-
-logo_label = QLabel("🖼 Logo")
-
-logo_label.setStyleSheet("color:white;")
-
-card_layout.addWidget(logo_label)
-
-self.logo_path = QLabel("No logo selected")
-
-self.logo_path.setMinimumHeight(35)
-
-self.logo_path.setStyleSheet("""
-background:#222;
-color:#bbbbbb;
-padding:8px;
-border-radius:6px;
-""")
-
-card_layout.addWidget(self.logo_path)
-
-card_layout.addSpacing(15)
-
-# ---------- OUTPUT ----------
-
-output_label = QLabel("📂 Output Folder")
-
-output_label.setStyleSheet("color:white;")
-
-card_layout.addWidget(output_label)
-
-self.output_path = QLabel("No output folder selected")
-
-self.output_path.setMinimumHeight(35)
-
-self.output_path.setStyleSheet("""
-background:#222;
-color:#bbbbbb;
-padding:8px;
-border-radius:6px;
-""")
-
-card_layout.addWidget(self.output_path)
-
-card_layout.addSpacing(25)
-
-# ---------- VIDEO INFO ----------
-
-info = QLabel("Video Information")
-
-info.setStyleSheet("""
-color:white;
-font-size:18px;
-font-weight:bold;
-""")
-
-card_layout.addWidget(info)
-
-card_layout.addSpacing(10)
-
-for text in [
-    "Duration : --",
-    "Resolution : --",
-    "FPS : --"
-]:
-    lbl = QLabel(text)
-    lbl.setStyleSheet("color:#cccccc;")
-    card_layout.addWidget(lbl)
-
-card_layout.addSpacing(30)
-
-continue_button = QPushButton("Continue")
-
-continue_button.setMinimumHeight(45)
-
-continue_button.setStyleSheet("""
-QPushButton{
-    background:#0078D4;
-    color:white;
-    border:none;
-    border-radius:8px;
-    font-size:15px;
-}
-
-QPushButton:hover{
-    background:#2196F3;
-}
-""")
-
-card_layout.addWidget(continue_button)
-
-card.setLayout(card_layout)
-
-workspace_layout.addWidget(card)
-
-workspace.setLayout(workspace_layout)
-
-        # Status bar
-
-status = QFrame()
-
-status.setFixedHeight(32)
-
-status.setStyleSheet("""
-            background:#202020;
-            color:#cccccc;
+        self.status_indicator = QLabel("● Ready")
+
+        self.status_indicator.setStyleSheet("""
+            color:#43d854;
+            font-size:13px;
+            font-weight:bold;
         """)
 
-status_layout = QHBoxLayout()
+        header_layout.addWidget(self.status_indicator)
+        # ==========================
+        # Project Setup Widget
+        # ==========================
 
-self.status_label = QLabel("Ready")
+        self.project_setup_widget = ProjectSetupWidget()
+        self.project_setup_widget.setSizePolicy(
+            QSizePolicy.Expanding,
+            QSizePolicy.Expanding
+        )
 
-status_layout.addWidget(self.status_label)
+        content_layout = QVBoxLayout()
+        content_layout.setContentsMargins(20, 20, 20, 20)
+        content_layout.addWidget(self.project_setup_widget)
 
-status_layout.addStretch()
+        content_widget = QWidget()
+        content_widget.setLayout(content_layout)
 
-status.setLayout(status_layout)
+        # Add widgets to right panel
+        right_layout.addWidget(header)
+        right_layout.addWidget(content_widget)
 
-right_layout.addWidget(header)
+        # Add sidebar and right panel
+        root_layout.addWidget(sidebar)
+        root_layout.addWidget(right_panel)
 
-right_layout.addWidget(workspace)
+        # ==========================
+        # Status Bar
+        # ==========================
 
-right_layout.addWidget(status)
+        status_bar = QStatusBar()
+        status_bar.showMessage("Ready")
+        self.setStatusBar(status_bar)
 
-right.setLayout(right_layout)
-
-root.addWidget(sidebar)
-root.addWidget(right)
-
-central.setLayout(root)
+        self.status_bar = status_bar
