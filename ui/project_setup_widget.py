@@ -1,3 +1,4 @@
+from utils.video_utils import get_video_info
 from pathlib import Path
 
 from PySide6.QtCore import Qt
@@ -194,7 +195,7 @@ class ProjectSetupWidget(QWidget):
         self.connect_signals()
 
         root.addStretch()
-        
+
     def connect_signals(self):
         """Connect all button signals."""
 
@@ -210,5 +211,20 @@ class ProjectSetupWidget(QWidget):
             "Video Files (*.mp4 *.mov *.avi *.mkv *.wmv)"
         )
 
-        if file_path:
-            self.video_card.set_path(file_path)
+        if not file_path:
+            return
+
+        # Show selected file name
+        self.video_card.set_path(file_path)
+
+        # Read video information
+        info = get_video_info(file_path)
+        print("Video Info:", info)
+        if info is None:
+            return
+
+        # Update UI
+        self.duration.setText(f"Duration : {info['duration']}")
+        self.resolution.setText(f"Resolution : {info['resolution']}")
+        self.fps.setText(f"FPS : {info['fps']}")
+        self.size.setText(f"File Size : {info['size']}")
