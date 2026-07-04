@@ -1,0 +1,9 @@
+APP_NAME = "AI Clipping Tool"
+
+VERSION = "0.2.0"
+
+AUTHOR = "Ansh Sharma"
+
+WINDOW_WIDTH = 1200
+
+WINDOW_HEIGHT = 720
