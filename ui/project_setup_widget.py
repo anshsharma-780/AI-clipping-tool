@@ -1,3 +1,4 @@
+from utils.audio_utils import extract_audio
 from utils.video_utils import get_video_info
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QFrame,
     QFileDialog,
+     QMessageBox,
 )
 
 
@@ -200,21 +202,23 @@ class ProjectSetupWidget(QWidget):
         """Connect all button signals."""
 
         self.video_card.button.clicked.connect(self.browse_video)
-
+        self.logo_card.button.clicked.connect(self.browse_logo)
+        self.output_card.button.clicked.connect(self.browse_output_folder)
+        self.generate_button.clicked.connect(self.generate_project)
+        
     def browse_video(self):
-        """Open file dialog to select a video."""
+        """Select input video."""
 
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Select Video",
             "",
-            "Video Files (*.mp4 *.mov *.avi *.mkv *.wmv)"
+            "Videos (*.mp4 *.mov *.avi *.mkv)"
         )
 
         if not file_path:
             return
 
-        # Show selected file name
         self.video_card.set_path(file_path)
 
         # Read video information
@@ -228,3 +232,73 @@ class ProjectSetupWidget(QWidget):
         self.resolution.setText(f"Resolution : {info['resolution']}")
         self.fps.setText(f"FPS : {info['fps']}")
         self.size.setText(f"File Size : {info['size']}")
+
+    def browse_logo(self):
+        """Select channel logo."""
+
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select Logo",
+            "",
+            "Images (*.png *.jpg *.jpeg)"
+        )
+
+        if not file_path:
+            return
+
+        self.logo_card.set_path(file_path)
+
+    def browse_output_folder(self):
+        """Select output folder."""
+
+        folder = QFileDialog.getExistingDirectory(
+            self,
+            "Select Output Folder"
+        )
+
+        if not folder:
+            return
+
+        self.output_card.set_path(folder)
+
+    def generate_project(self):
+        from PySide6.QtWidgets import QMessageBox
+
+        if not self.video_card.path:
+            QMessageBox.warning(
+                self,
+                "Missing Video",
+                "Please select an input video."
+            )
+            return
+
+        if not self.logo_card.path:
+            QMessageBox.warning(
+                self,
+                "Missing Logo",
+                "Please select a channel logo."
+            )
+            return
+
+        if not self.output_card.path:
+            QMessageBox.warning(
+                self,
+                "Missing Output Folder",
+                "Please select an output folder."
+            )
+            return
+        try:
+            audio_file = extract_audio(self.video_card.path)
+
+            QMessageBox.information(
+                self,
+                "Success",
+                f"Audio extracted successfully!\n\n{audio_file}"
+            )
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Audio Extraction Failed",
+                str(e)
+            )
+       
