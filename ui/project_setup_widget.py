@@ -264,41 +264,51 @@ class ProjectSetupWidget(QWidget):
     def generate_project(self):
         from PySide6.QtWidgets import QMessageBox
 
+        from pipeline.clip_pipeline import run_clip_pipeline
+
         if not self.video_card.path:
+
             QMessageBox.warning(
                 self,
                 "Missing Video",
-                "Please select an input video."
+                "Please choose a video."
             )
-            return
 
-        if not self.logo_card.path:
-            QMessageBox.warning(
-                self,
-                "Missing Logo",
-                "Please select a channel logo."
-            )
             return
 
         if not self.output_card.path:
+
             QMessageBox.warning(
                 self,
                 "Missing Output Folder",
-                "Please select an output folder."
+                "Please choose an output folder."
             )
+
             return
+
         try:
-            audio_file = extract_audio(self.video_card.path)
+            (
+                "Generating AI clips..."
+            )
+
+            clips = run_clip_pipeline(
+                self.video_card.path,
+                self.output_card.path
+            )
+
+            (
+                "Finished"
+            )
 
             QMessageBox.information(
                 self,
                 "Success",
-                f"Audio extracted successfully!\n\n{audio_file}"
+                f"{len(clips)} AI clips generated successfully!"
             )
+
         except Exception as e:
             QMessageBox.critical(
                 self,
-                "Audio Extraction Failed",
+                "Pipeline Error",
                 str(e)
             )
-       

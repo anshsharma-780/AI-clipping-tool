@@ -1,5 +1,4 @@
-from ui.transcript_viewer import TranscriptViewer
-from PySide6.QtCore import Qt
+#from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,

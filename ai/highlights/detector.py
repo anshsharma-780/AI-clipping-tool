@@ -1,32 +1,19 @@
-from ai.highlights.segment_reader import load_segments
-from ai.highlights.scorer import score_sentence
+from pipeline.highlight_pipeline import generate_highlights
 
 
-def detect_highlights(segments_path, top_n=10):
+def detect_highlights(
+    segments_path,
+    top_n=None
+):
     """
-    Score Whisper segments and return the best candidates.
+    Compatibility wrapper.
     """
 
-    segments = load_segments(segments_path)
-
-    candidates = []
-
-    for segment in segments:
-
-        score = score_sentence(segment["text"])
-
-        candidates.append(
-            {
-                "score": score,
-                "start": segment["start"],
-                "end": segment["end"],
-                "text": segment["text"]
-            }
-        )
-
-    candidates.sort(
-        key=lambda x: x["score"],
-        reverse=True
+    results = generate_highlights(
+        segments_path
     )
 
-    return candidates[:top_n]
+    if top_n is None:
+        return results
+
+    return results[:top_n]
