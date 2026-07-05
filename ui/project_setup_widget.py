@@ -1,3 +1,7 @@
+from PySide6.QtCore import QThread
+
+from workers.clip_pipeline_worker import ClipPipelineWorker
+from ui.progress_dialog import ProgressDialog
 from utils.audio_utils import extract_audio
 from utils.video_utils import get_video_info
 from pathlib import Path
@@ -262,53 +266,73 @@ class ProjectSetupWidget(QWidget):
         self.output_card.set_path(folder)
 
     def generate_project(self):
-        from PySide6.QtWidgets import QMessageBox
-
-        from pipeline.clip_pipeline import run_clip_pipeline
-
         if not self.video_card.path:
-
             QMessageBox.warning(
                 self,
                 "Missing Video",
                 "Please choose a video."
             )
-
             return
 
         if not self.output_card.path:
-
             QMessageBox.warning(
                 self,
                 "Missing Output Folder",
                 "Please choose an output folder."
             )
-
             return
 
-        try:
-            (
-                "Generating AI clips..."
-            )
+        # -------------------------
+        # Progress Dialog
+        # -------------------------
+        self.progress_dialog = ProgressDialog(self)
+        self.progress_dialog.progress.setValue(0)
+        self.progress_dialog.status.setText(
+            "Preparing..."
+        )
+        self.progress_dialog.show()
 
-            clips = run_clip_pipeline(
+        # -------------------------
+        # Worker Thread
+        # -------------------------
+        self.thread = QThread()
+        self.worker = ClipPipelineWorker()
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(
+            lambda: self.worker.run(
                 self.video_card.path,
                 self.output_card.path
             )
+        )
 
-            (
-                "Finished"
-            )
+        self.worker.progress.connect(self.update_progress)
+        self.worker.finished.connect(self.pipeline_finished)
+        self.worker.error.connect(self.pipeline_failed)
 
-            QMessageBox.information(
-                self,
-                "Success",
-                f"{len(clips)} AI clips generated successfully!"
-            )
+        self.thread.start()
+        
+    def update_progress(self, value, message):
+        self.progress_dialog.progress.setValue(value)
+        self.progress_dialog.status.setText(message)
+    
+    def pipeline_finished(self, clips):
+        from PySide6.QtWidgets import QMessageBox
+        self.thread.quit()
+        self.thread.wait()
+        self.progress_dialog.close()
+        QMessageBox.information(
+            self,
+            "Finished",
+            f"{len(clips)} clips generated successfully!"
+        )
 
-        except Exception as e:
-            QMessageBox.critical(
-                self,
-                "Pipeline Error",
-                str(e)
-            )
+    def pipeline_failed(self, message):
+        from PySide6.QtWidgets import QMessageBox
+        self.thread.quit()
+        self.thread.wait()
+        self.progress_dialog.close()
+        QMessageBox.critical(
+            self,
+            "Pipeline Error",
+            message
+        )
