@@ -12,31 +12,31 @@
             50414
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 1,
         "seek": 0,
         "start": 1.0,
         "end": 3.0,
-        "text": " My go down to DOD.",
+        "text": " My go down to TOD.",
         "tokens": [
             50414,
             1222,
             352,
             760,
             281,
-            10699,
+            8232,
             35,
             13,
             50514
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 2,
@@ -51,9 +51,9 @@
             50564
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 3,
@@ -68,9 +68,9 @@
             50614
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 4,
@@ -91,9 +91,9 @@
             50664
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 5,
@@ -108,9 +108,9 @@
             50714
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 6,
@@ -125,9 +125,9 @@
             50764
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 7,
@@ -148,9 +148,9 @@
             50864
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 8,
@@ -167,31 +167,65 @@
             50914
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     },
     {
         "id": 9,
         "seek": 0,
         "start": 11.0,
-        "end": 14.0,
-        "text": " It's pretty straight with your feet.",
+        "end": 12.0,
+        "text": " It's still.",
         "tokens": [
             50914,
             467,
             311,
-            1238,
-            2997,
-            365,
-            428,
-            3521,
+            920,
+            13,
+            50964
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
+    },
+    {
+        "id": 10,
+        "seek": 0,
+        "start": 12.0,
+        "end": 13.0,
+        "text": " It's still.",
+        "tokens": [
+            50964,
+            467,
+            311,
+            920,
+            13,
+            51014
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
+    },
+    {
+        "id": 11,
+        "seek": 0,
+        "start": 13.0,
+        "end": 14.0,
+        "text": " It's still.",
+        "tokens": [
+            51014,
+            467,
+            311,
+            920,
             13,
             51064
         ],
         "temperature": 0.0,
-        "avg_logprob": -0.5487324685761423,
-        "compression_ratio": 1.3083333333333333,
-        "no_speech_prob": 0.36092546582221985
+        "avg_logprob": -0.5281960255390888,
+        "compression_ratio": 1.5445544554455446,
+        "no_speech_prob": 0.37146928906440735
     }
 ]

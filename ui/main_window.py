@@ -1,4 +1,4 @@
-#from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
@@ -12,9 +12,12 @@ from PySide6.QtWidgets import (
 )
 
 from ui.project_setup_widget import ProjectSetupWidget
+from ui.media_library import MediaLibrary
+from ui.settings_dialog import SettingsDialog
 
 
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
 
@@ -64,7 +67,7 @@ class MainWindow(QMainWindow):
         """)
 
         sidebar_layout = QVBoxLayout(sidebar)
-        sidebar_layout.setContentsMargins(15,20,15,20)
+        sidebar_layout.setContentsMargins(15, 20, 15, 20)
         sidebar_layout.setSpacing(10)
 
         logo = QLabel("AI Clipping Tool")
@@ -81,6 +84,11 @@ class MainWindow(QMainWindow):
         self.home_button = QPushButton("🏠  Home")
         self.projects_button = QPushButton("📁  Projects")
         self.settings_button = QPushButton("⚙  Settings")
+
+        # Connect Settings button
+        self.settings_button.clicked.connect(
+            self.open_settings
+        )
 
         sidebar_layout.addWidget(self.home_button)
         sidebar_layout.addWidget(self.projects_button)
@@ -104,7 +112,7 @@ class MainWindow(QMainWindow):
         right_panel = QWidget()
 
         right_layout = QVBoxLayout(right_panel)
-        right_layout.setContentsMargins(0,0,0,0)
+        right_layout.setContentsMargins(0, 0, 0, 0)
         right_layout.setSpacing(0)
 
         # ==========================
@@ -123,7 +131,7 @@ class MainWindow(QMainWindow):
         """)
 
         header_layout = QHBoxLayout(header)
-        header_layout.setContentsMargins(20,10,20,10)
+        header_layout.setContentsMargins(20, 10, 20, 10)
 
         title = QLabel("🚀 AI Clipping Tool")
 
@@ -157,28 +165,47 @@ class MainWindow(QMainWindow):
         """)
 
         header_layout.addWidget(self.status_indicator)
+
         # ==========================
-        # Project Setup Widget
+        # Content
         # ==========================
 
         self.project_setup_widget = ProjectSetupWidget()
+
         self.project_setup_widget.setSizePolicy(
             QSizePolicy.Expanding,
             QSizePolicy.Expanding
         )
 
-        content_layout = QVBoxLayout()
+        self.project_setup_widget.setMaximumWidth(500)
+
+        self.media_library = MediaLibrary()
+
+        # Refresh Media Library after generation
+        self.project_setup_widget.generationFinished.connect(
+            self.media_library.refresh_library
+        )
+
+        content_layout = QHBoxLayout()
         content_layout.setContentsMargins(20, 20, 20, 20)
-        content_layout.addWidget(self.project_setup_widget)
+        content_layout.setSpacing(20)
+
+        content_layout.addWidget(
+            self.project_setup_widget,
+            1
+        )
+
+        content_layout.addWidget(
+            self.media_library,
+            1
+        )
 
         content_widget = QWidget()
         content_widget.setLayout(content_layout)
 
-        # Add widgets to right panel
         right_layout.addWidget(header)
         right_layout.addWidget(content_widget)
 
-        # Add sidebar and right panel
         root_layout.addWidget(sidebar)
         root_layout.addWidget(right_panel)
 
@@ -186,8 +213,17 @@ class MainWindow(QMainWindow):
         # Status Bar
         # ==========================
 
-        status_bar = QStatusBar()
-        status_bar.showMessage("Ready")
-        self.setStatusBar(status_bar)
+        self.status_bar = QStatusBar()
+        self.status_bar.showMessage("Ready")
 
-        self.status_bar = status_bar
+        self.setStatusBar(self.status_bar)
+
+    # =====================================
+    # Settings Dialog
+    # =====================================
+
+    def open_settings(self):
+
+        dialog = SettingsDialog(self)
+
+        dialog.exec()

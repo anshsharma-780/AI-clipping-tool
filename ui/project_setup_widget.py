@@ -1,4 +1,7 @@
-from PySide6.QtCore import QThread
+import os
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtCore import QUrl
+from PySide6.QtCore import QThread, Signal
 
 from workers.clip_pipeline_worker import ClipPipelineWorker
 from ui.progress_dialog import ProgressDialog
@@ -87,6 +90,7 @@ class FileSelectorCard(QFrame):
         )
 
 class ProjectSetupWidget(QWidget):
+    generationFinished = Signal()
 
     def __init__(self):
         super().__init__()
@@ -316,15 +320,40 @@ class ProjectSetupWidget(QWidget):
         self.progress_dialog.status.setText(message)
     
     def pipeline_finished(self, clips):
-        from PySide6.QtWidgets import QMessageBox
         self.thread.quit()
         self.thread.wait()
+
         self.progress_dialog.close()
-        QMessageBox.information(
-            self,
-            "Finished",
-            f"{len(clips)} clips generated successfully!"
+
+        self.generationFinished.emit()
+
+        message = QMessageBox(self)
+
+        message.setWindowTitle("Generation Complete")
+
+        message.setIcon(QMessageBox.Information)
+
+        message.setText(
+            f"Successfully generated {len(clips)} clip(s)."
         )
+
+        open_button = message.addButton(
+            "📂 Open Output Folder",
+            QMessageBox.ActionRole
+        )
+
+        message.addButton(
+            QMessageBox.Ok
+        )
+
+        message.exec()
+
+        if message.clickedButton() == open_button:
+            QDesktopServices.openUrl(
+                QUrl.fromLocalFile(
+                    self.output_card.path
+                )
+            )
 
     def pipeline_failed(self, message):
         from PySide6.QtWidgets import QMessageBox

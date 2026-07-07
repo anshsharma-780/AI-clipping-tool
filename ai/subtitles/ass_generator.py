@@ -1,6 +1,6 @@
 import json
-
-from ai.subtitles.subtitle_styles import DEFAULT_STYLE
+from config.app_settings import settings
+from ai.subtitles.subtitle_styles import build_style
 
 
 def seconds_to_ass(seconds):
@@ -10,8 +10,14 @@ def seconds_to_ass(seconds):
 
     return f"{hours}:{minutes:02}:{secs:05.2f}"
 
+def generate_ass(
+    segments_json,
+    output_file,
+    theme=None
+):
 
-def generate_ass(segments_json, output_file):
+    if theme is None:
+        theme = settings.get("subtitle_theme")
 
     with open(segments_json, "r", encoding="utf-8") as f:
         segments = json.load(f)
@@ -26,7 +32,7 @@ def generate_ass(segments_json, output_file):
 
         f.write("[V4+ Styles]\n")
         f.write("Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding\n")
-        f.write(DEFAULT_STYLE.strip())
+        f.write(build_style(theme).strip())
         f.write("\n\n")
 
         f.write("[Events]\n")
@@ -36,8 +42,14 @@ def generate_ass(segments_json, output_file):
 
         for segment in segments:
 
-            text = segment["text"].strip()
-
+            text = (
+                segment["text"]
+                .strip()
+                .replace("\n", " ")
+                .upper()
+            )
+            while "  " in text:
+                text = text.replace("  ", " ")
             if not text:
                 continue
 

@@ -1,0 +1,7 @@
+{
+    "video": "input/video.mp4",
+    "logo": "assets/logo.png",
+    "output": "output/",
+    "subtitle_theme": "instagram",
+    "smart_crop": true
+}
