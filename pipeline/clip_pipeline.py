@@ -1,15 +1,18 @@
 from pathlib import Path
 
+from config.app_settings import settings
 from utils.audio_utils import extract_audio
 from ai.whisper.transcriber import transcribe_audio
 from pipeline.highlight_pipeline import generate_highlights
 from ai.highlights.clip_generator import generate_clip
+from ai.subtitles.ass_generator import generate_ass
 
 
 def run_clip_pipeline(
     video_path,
     output_folder,
-    progress_callback=None
+    progress_callback=None,
+    logo_path=None,
 ):
     """
     Complete AI clipping pipeline.
@@ -74,6 +77,11 @@ def run_clip_pipeline(
 
     segments_path = transcript["segments"]
 
+    subtitle_file = None
+    if settings.get("subtitle_enabled"):
+        subtitle_file = output_folder / "subtitles.ass"
+        generate_ass(str(segments_path), str(subtitle_file))
+
     # ============================================
     # STEP 3
     # Highlight Detection
@@ -126,7 +134,9 @@ def run_clip_pipeline(
             video_path,
             clip["start"],
             clip["end"],
-            str(output_path)
+            str(output_path),
+            subtitle_file=str(subtitle_file) if subtitle_file else None,
+            logo_path=logo_path,
         )
 
         generated_files.append(

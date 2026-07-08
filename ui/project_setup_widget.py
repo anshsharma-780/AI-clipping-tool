@@ -305,7 +305,8 @@ class ProjectSetupWidget(QWidget):
         self.thread.started.connect(
             lambda: self.worker.run(
                 self.video_card.path,
-                self.output_card.path
+                self.output_card.path,
+                self.logo_card.path or None
             )
         )
 

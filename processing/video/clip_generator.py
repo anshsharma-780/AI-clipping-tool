@@ -1,6 +1,9 @@
 import subprocess
 from pathlib import Path
 
+from render.render_engine import RenderEngine
+from render.render_job import RenderJob
+
 
 class ClipGenerationError(Exception):
     """Raised when clip generation fails."""
@@ -12,10 +15,14 @@ def generate_clip(
     output_folder,
     start_time,
     end_time,
-    output_name="clip_001.mp4"
+    output_name="clip_001.mp4",
+    subtitle_file=None,
+    logo_path=None,
+    logo_position="top-right",
 ):
     """
-    Generate a video clip using FFmpeg.
+    Generate a video clip using the render engine so subtitles and logos
+    are preserved in the exported clip.
 
     Args:
         input_video (str)
@@ -36,30 +43,15 @@ def generate_clip(
 
     output_path = output_dir / output_name
 
-    duration = end_time - start_time
-
-    command = [
-        "ffmpeg",
-        "-y",
-        "-ss",
-        str(start_time),
-        "-i",
-        input_video,
-        "-t",
-        str(duration),
-        "-c",
-        "copy",
-        str(output_path)
-    ]
-
-    result = subprocess.run(
-        command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
+    job = RenderJob(
+        input_video=input_video,
+        output_video=str(output_path),
+        clip_start=start_time,
+        clip_end=end_time,
+        subtitles=subtitle_file,
+        logo=logo_path,
+        logo_position=logo_position,
     )
 
-    if result.returncode != 0:
-        raise ClipGenerationError(result.stderr)
-
-    return str(output_path)
+    engine = RenderEngine()
+    return engine.render(job)

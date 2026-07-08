@@ -1,14 +1,20 @@
-import subprocess
 from pathlib import Path
 
+from render.render_engine import RenderEngine
+from render.render_job import RenderJob
 
-import subprocess
-from pathlib import Path
 
-
-def generate_clip(video_path, start_time, end_time, output_path):
+def generate_clip(
+    video_path,
+    start_time,
+    end_time,
+    output_path,
+    subtitle_file=None,
+    logo_path=None,
+    logo_position="top-right",
+):
     """
-    Generate a video clip with audio using FFmpeg.
+    Generate a video clip with audio and apply subtitle/logo overlays.
     """
 
     output = Path(output_path)
@@ -19,35 +25,15 @@ def generate_clip(video_path, start_time, end_time, output_path):
     if duration <= 0:
         raise ValueError("Clip duration must be greater than zero.")
 
-    command = [
-        "ffmpeg",
-        "-y",
-
-        "-i", video_path,
-
-        "-ss", str(start_time),
-
-        "-t", str(duration),
-
-        "-c:v", "libx264",
-        "-preset", "fast",
-        "-pix_fmt", "yuv420p",
-
-        "-c:a", "aac",
-        "-b:a", "192k",
-
-        "-movflags", "+faststart",
-
-        str(output)
-    ]
-
-    result = subprocess.run(
-        command,
-        capture_output=True,
-        text=True
+    job = RenderJob(
+        input_video=video_path,
+        output_video=str(output),
+        clip_start=start_time,
+        clip_end=end_time,
+        subtitles=subtitle_file,
+        logo=logo_path,
+        logo_position=logo_position,
     )
 
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr)
-
-    return str(output)
+    engine = RenderEngine()
+    return engine.render(job)

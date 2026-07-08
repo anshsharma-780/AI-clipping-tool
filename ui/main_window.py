@@ -223,7 +223,15 @@ class MainWindow(QMainWindow):
     # =====================================
 
     def open_settings(self):
+        try:
+            dialog = SettingsDialog(self)
+            dialog.exec()
 
-        dialog = SettingsDialog(self)
+        except Exception:
+            import traceback
 
-        dialog.exec()
+            print("\n" + "=" * 60)
+            print("SETTINGS DIALOG ERROR")
+            print("=" * 60)
+            traceback.print_exc()
+            print("=" * 60 + "\n")

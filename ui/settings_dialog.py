@@ -37,7 +37,7 @@ class SettingsDialog(QDialog):
             "Minimal"
         ])
 
-        current_theme = settings.get("subtitle_theme")
+        current_theme = settings.get("subtitle_theme", "tiktok")
 
         if current_theme == "tiktok":
             self.theme.setCurrentText("TikTok")
@@ -66,7 +66,7 @@ class SettingsDialog(QDialog):
             "Fast"
         ])
 
-        current_crf = settings.get("crf")
+        current_crf = settings.get("crf", 18)
 
         if current_crf <= 18:
             self.export_quality.setCurrentText("High")
@@ -94,18 +94,21 @@ class SettingsDialog(QDialog):
             "Medium",
             "Large"
         ])
-        current_logo = settings.get("logo_scale")
 
-        # Map numeric scale values to combo box text
-        if current_logo == 0.08:
-            current_logo = "Small"
-        elif current_logo == 0.16:
-            current_logo = "Large"
+        # ------------------------
+        # FIXED
+        # ------------------------
+
+        current_logo = str(
+            settings.get("logo_scale", "medium")
+        ).lower()
+
+        if current_logo == "small":
+            self.logo_size.setCurrentText("Small")
+        elif current_logo == "large":
+            self.logo_size.setCurrentText("Large")
         else:
-            # default to Medium for 0.12, None, or any other value
-            current_logo = "Medium"
-
-        self.logo_size.setCurrentText(current_logo)
+            self.logo_size.setCurrentText("Medium")
 
         row.addWidget(self.logo_size)
 
@@ -120,7 +123,7 @@ class SettingsDialog(QDialog):
         )
 
         self.smart_crop.setChecked(
-            settings.get("smart_crop")
+            settings.get("smart_crop", True)
         )
 
         layout.addWidget(self.smart_crop)

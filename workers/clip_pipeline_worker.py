@@ -12,13 +12,14 @@ class ClipPipelineWorker(QObject):
     error = Signal(str)
     progress = Signal(int, str)
 
-    def run(self, video_path, output_folder):
+    def run(self, video_path, output_folder, logo_path=None):
         try:
 
             clips = run_clip_pipeline(
                 video_path=video_path,
                 output_folder=output_folder,
-                progress_callback=self.progress.emit
+                progress_callback=self.progress.emit,
+                logo_path=logo_path,
             )
 
             self.finished.emit(clips)

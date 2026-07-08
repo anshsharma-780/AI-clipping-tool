@@ -9,9 +9,9 @@ class AppSettings:
 
         self._settings = self.manager.load()
 
-    def get(self, key):
+    def get(self, key, default=None):
 
-        return self._settings.get(key)
+        return self._settings.get(key, default)
 
     def set(self, key, value):
 

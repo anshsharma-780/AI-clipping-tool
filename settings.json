@@ -1,1 +1,26 @@
-{}
+{
+    "top_clips": 5,
+    "highlight_threshold": 30,
+    "keyword_weight": 1.0,
+    "structure_weight": 1.0,
+    "emotion_weight": 1.0,
+    "context_before": 5,
+    "context_after": 5,
+    "merge_gap": 3,
+    "min_clip_length": 15,
+    "max_clip_length": 60,
+    "whisper_model": "base",
+    "output_quality": "high",
+    "video_codec": "libx264",
+    "preset": "fast",
+    "crf": 18,
+    "subtitle_enabled": true,
+    "subtitle_theme": "instagram",
+    "logo_enabled": true,
+    "logo_position": "top-right",
+    "logo_scale": "small",
+    "smart_crop": true,
+    "crop_ratio": "9:16",
+    "export_format": "mp4",
+    "open_output_folder": true
+}
